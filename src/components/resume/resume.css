@@ -1,0 +1,51 @@
+* {
+    box-sizing: border-box;
+}
+
+#cv {
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid black;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+#profile header>div h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 3em;
+}
+
+#profile {
+    min-height: 35%;
+}
+
+#profile header img {
+    width: 23%;
+    border-radius: 100%;
+}
+
+#profile h1:last-of-type {
+    color: #D37621;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 600;
+}
+
+#experience header,
+#education header,
+h2 {
+    font-family: 'Bebas Neue', sans-serif;
+
+}
+
+
+header h4 {
+    color: #3297C4;
+}
+
+h6 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+section #language {
+    background: #F0EEEF;
+}
