@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { database } from '../firebaseConfig';
+import { database, storage } from '../firebaseConfig';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import UserContext from "./userContext";
+import { v4 } from 'uuid';
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const ResumeContext = createContext();
 
@@ -12,6 +14,8 @@ const Provider = ({ children }) => {
     const { auth } = useContext(UserContext);
     const [resumes, setResumes] = useState([]);
     const [showDownload, setShowDownload] = useState(false);
+    const [imageUpload, setImageUpload] = useState(null);
+
     const [formData, setFormData] = useState({
         userId: "",
         img: "",
@@ -72,18 +76,37 @@ const Provider = ({ children }) => {
         }));
     };
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const { name, value, type, files } = e.target;
-
         if (type === 'file') {
-            updateFormData(name, URL.createObjectURL(files[0]));
+            setImageUpload(files[0]);
+            updateFormData(name, imageUpload);
         } else {
             updateFormData(name, value);
         }
     };
 
-    const handleSubmit = () => {
+    const getImgUrl = async () => {
+        try {
+            if (imageUpload === null) return;
+
+            const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+            await uploadBytes(imageRef, imageUpload);
+
+            const imageUrl = await getDownloadURL(imageRef);
+            console.log(imageUrl);
+            return imageUrl;
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
         setShowDownload(true);
+        console.log(formData);
+        updateFormData('img', await getImgUrl());
         addDoc(collectionRef, formData)
             .then(() => {
                 console.log("Data added successfully");

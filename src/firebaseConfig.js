@@ -2,6 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import { getStorage } from "firebase/storage";
+
 const firebaseConfig = {
     apiKey: "AIzaSyAjfd9Mop3Gm38xVuYaubFDHF-KdBlZP7Q",
     authDomain: "resume-1bf6e.firebaseapp.com",
@@ -23,3 +25,4 @@ export const addUser = async (email, password, role) => {
 }
 
 
+export const storage = getStorage();
