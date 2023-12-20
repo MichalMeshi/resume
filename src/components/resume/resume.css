@@ -3,8 +3,8 @@
 }
 
 #cv {
-    width: 100%;
-    margin: 0 auto;
+    width: 80%;
+    margin: 10px auto;
     border: 1px solid black;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
@@ -12,6 +12,9 @@
 #profile header>div h1 {
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 3em;
+}
+#cv footer .social-links figure {
+    white-space: nowrap;
 }
 
 #profile {

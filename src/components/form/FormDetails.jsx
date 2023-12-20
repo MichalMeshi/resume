@@ -10,7 +10,7 @@ const FormDetails = () => {
     return (
         <div>
             <Form>
-                {/* <Form.Group controlId="formImg">
+                <Form.Group controlId="formImg">
                     <Form.Label>Image </Form.Label>
                     <Form.Control
                         type="file"
@@ -19,7 +19,7 @@ const FormDetails = () => {
                         value=""
                         onChange={handleChange}
                     />
-                </Form.Group> */}
+                </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicText">
                     <Form.Label>Name</Form.Label>
                     <Form.Control type="text" placeholder="firstName" name="firstName" value={formData.firstName} onChange={handleChange} />

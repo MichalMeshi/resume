@@ -3,15 +3,18 @@ import { database } from '../firebaseConfig';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import UserContext from "./userContext";
 
 const ResumeContext = createContext();
 
 const Provider = ({ children }) => {
-    const [auth, setAuth] = useState(getAuth());
     const collectionRef = collection(database, 'resumes');
+    const { auth } = useContext(UserContext);
+    const [resumes, setResumes] = useState([]);
+    const [showDownload, setShowDownload] = useState(false);
     const [formData, setFormData] = useState({
         userId: "",
-        // img: null,
+        img: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -44,6 +47,7 @@ const Provider = ({ children }) => {
         aboutMe: ""
 
     });
+
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -51,6 +55,7 @@ const Provider = ({ children }) => {
             }
         });
     }, [])
+
     const updateNestedField = (e, nestedFieldName) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -59,6 +64,7 @@ const Provider = ({ children }) => {
         }));
         console.log(formData);
     };
+
     const updateFormData = (name, value) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -66,20 +72,18 @@ const Provider = ({ children }) => {
         }));
     };
 
-
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
 
         if (type === 'file') {
-            updateFormData(name, files[0]);
+            updateFormData(name, URL.createObjectURL(files[0]));
         } else {
             updateFormData(name, value);
         }
     };
 
-
     const handleSubmit = () => {
-
+        setShowDownload(true);
         addDoc(collectionRef, formData)
             .then(() => {
                 console.log("Data added successfully");
@@ -94,14 +98,25 @@ const Provider = ({ children }) => {
             const userId = auth.currentUser.uid;
             const queryFind = query(collectionRef, where('userId', '==', userId));
             const response = await getDocs(queryFind);
-            return response.docs.map((doc) => doc.data());
+            setResumes(response.docs.map((doc) => doc.data()));
+
         } catch (err) {
             console.log(err.message);
             return [];
         }
     }
 
-    const shared = { formData, handleChange, handleSubmit, setFormData, updateNestedField, auth, getDataByUserId };
+    const getAllResumes = async () => {
+        getDocs(collectionRef)
+            .then((response) => {
+                setResumes(response.docs.map((item) => item.data()));
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
+    const shared = { formData, handleChange, handleSubmit, setFormData, updateNestedField, getDataByUserId, resumes, getAllResumes, showDownload, setShowDownload };
     return (
         <ResumeContext.Provider value={shared}>
             {children}
